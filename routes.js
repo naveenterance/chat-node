@@ -28,7 +28,7 @@ router.get("/users", async (req, res) => {
   }
 });
 
-router.get("/about", (req, res) => {
+router.get("/", (req, res) => {
   res.send("it's working ");
 });
 
