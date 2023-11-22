@@ -8,7 +8,7 @@
   ],
   "routes": [
     {
-      "src": "users/(.*)",
+      "src": "/users/(.*)",
       "dest": "index.js",
       "status": 307
     }
