@@ -1,6 +1,6 @@
 const express = require("express");
 const User = require("./user");
-
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 // Create a new user
@@ -62,4 +62,25 @@ router.delete("/users/:id", async (req, res) => {
     res.status(500).send(error);
   }
 });
+
+router.post("/users/login", async (req, res) => {
+  const { name, email } = req.body;
+
+  try {
+    const user = await User.findOne({ name });
+
+    if (!user || user.email !== email) {
+      return res.status(401).json({ error: "Invalid username or password" });
+    } else {
+      const token = jwt.sign({ userId: user._id }, "your-secret-key", {
+        expiresIn: "1h",
+      });
+      res.json({ token });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error);
+  }
+});
+
 module.exports = router;
