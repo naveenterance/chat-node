@@ -64,15 +64,15 @@ router.delete("/users/:id", async (req, res) => {
 });
 
 router.post("/users/login", async (req, res) => {
-  const { name, email } = req.body;
+  const { name, password } = req.body;
 
   try {
     const user = await User.findOne({ name });
 
-    if (!user || user.email !== email) {
+    if (!user || user.password !== password) {
       return res.status(401).json({ error: "Invalid username or password" });
     } else {
-      const token = jwt.sign({ userId: user._id }, "your-secret-key", {
+      const token = jwt.sign({ name: user.name }, "your-secret-key", {
         expiresIn: "1h",
       });
       res.json({ token });
