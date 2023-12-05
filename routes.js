@@ -5,10 +5,10 @@ const router = express.Router();
 
 // Create a new user
 router.post("/users", async (req, res) => {
-  const { name, email, age } = req.body;
+  const { name, email, password } = req.body;
 
   try {
-    const user = new User({ name, email, age });
+    const user = new User({ name, email, password });
     await user.save();
     res.send(user);
   } catch (error) {
@@ -35,12 +35,12 @@ router.get("/", (req, res) => {
 // Update a user
 router.put("/users/:id", async (req, res) => {
   const { id } = req.params;
-  const { name, email, age } = req.body;
+  const { name, email, password } = req.body;
 
   try {
     const user = await User.findByIdAndUpdate(
       id,
-      { name, email, age },
+      { name, email, password },
       { new: true }
     );
     res.send(user);
@@ -77,6 +77,23 @@ router.post("/users/login", async (req, res) => {
       });
       res.json({ token });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error);
+  }
+});
+
+router.get("/users/:id", async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    res.send(user);
   } catch (error) {
     console.error(error);
     res.status(500).send(error);
