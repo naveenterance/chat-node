@@ -100,4 +100,21 @@ router.get("/users/:id", async (req, res) => {
   }
 });
 
+router.post("/users/:name", async (req, res) => {
+  const { name } = req.params;
+
+  try {
+    console.log("Searching for user with name:", name);
+    const user = await User.findOne({ name });
+
+    if (!user) {
+      return res.status(404).json({ exists: false });
+    }
+
+    res.json({ exists: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 module.exports = router;
